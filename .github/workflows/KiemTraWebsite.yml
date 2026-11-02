@@ -1,0 +1,30 @@
+name: KiemTraWebsite
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # Chu ky chung. Muon 10 phut thi doi thanh "*/10 * * * *"
+  workflow_dispatch:         # Cho phep chay thu cong de kiem thu
+
+permissions:
+  contents: read             # Se doi thanh write o buoc 3 (commit TrangThai.json)
+
+concurrency:
+  group: kiemtra-website     # Khong chay chong 2 luot cung luc
+  cancel-in-progress: false
+
+jobs:
+  KiemTra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Chay kiem tra
+        working-directory: src/GiamSatWebsite
+        env:
+          DANH_SACH_WEBSITE: ${{ secrets.DANH_SACH_WEBSITE }}
+        run: dotnet run -c Release
