@@ -1,0 +1,33 @@
+{
+  "LanGhiCuoi": "2026-11-03T07:12:21Z",
+  "DanhSachWebsite": {
+    "Website01": {
+      "HoatDong": true,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    },
+    "Website02": {
+      "HoatDong": true,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    },
+    "Test02": {
+      "HoatDong": false,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    },
+    "Test03": {
+      "HoatDong": false,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    },
+    "Test04": {
+      "HoatDong": false,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    },
+    "Test05": {
+      "HoatDong": false,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    },
+    "Test06": {
+      "HoatDong": false,
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+    }
+  }
+}
