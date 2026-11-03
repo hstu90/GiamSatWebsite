@@ -1,13 +1,9 @@
 {
-  "LanGhiCuoi": "2026-11-03T07:12:21Z",
+  "LanGhiCuoi": "2026-11-03T07:14:56Z",
   "DanhSachWebsite": {
-    "Website01": {
+    "Test01": {
       "HoatDong": true,
-      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
-    },
-    "Website02": {
-      "HoatDong": true,
-      "ThoiDiemDoiTrangThai": "2026-11-03T07:12:21Z"
+      "ThoiDiemDoiTrangThai": "2026-11-03T07:14:56Z"
     },
     "Test02": {
       "HoatDong": false,
