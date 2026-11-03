@@ -1,18 +1,18 @@
 using System.Text.Json;
 
 // Doc danh sach website tu GitHub Secret
-var chuoiJson = Environment.GetEnvironmentVariable("DANH_SACH_WEBSITE");
-if (string.IsNullOrWhiteSpace(chuoiJson))
+var ChuoiJson = Environment.GetEnvironmentVariable("DANH_SACH_WEBSITE");
+if (string.IsNullOrWhiteSpace(ChuoiJson))
 {
     Console.Error.WriteLine("Thieu secret DANH_SACH_WEBSITE.");
     return 1;
 }
 
-List<WebsiteCauHinh>? danhSach;
+List<WebsiteCauHinh>? DanhSach;
 try
 {
-    danhSach = JsonSerializer.Deserialize<List<WebsiteCauHinh>>(
-        chuoiJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    DanhSach = JsonSerializer.Deserialize<List<WebsiteCauHinh>>(
+        ChuoiJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 }
 catch (JsonException)
 {
@@ -21,26 +21,36 @@ catch (JsonException)
     return 1;
 }
 
-if (danhSach is null || danhSach.Count == 0)
+if (DanhSach is null || DanhSach.Count == 0)
 {
     Console.Error.WriteLine("DANH_SACH_WEBSITE rong.");
     return 1;
 }
 
 // Che URL va ten trong log cong khai cua Actions
-foreach (var website in danhSach)
+foreach (var Website in DanhSach)
 {
-    Console.WriteLine($"::add-mask::{website.Url}");
-    Console.WriteLine($"::add-mask::{website.TenWebsite}");
+    Console.WriteLine($"::add-mask::{Website.Url}");
+    Console.WriteLine($"::add-mask::{Website.TenWebsite}");
 }
 
-// Log chi ghi ma dinh danh, khong ghi URL/ten
-Console.WriteLine($"Da doc {danhSach.Count} website tu secret.");
-foreach (var website in danhSach)
+Console.WriteLine($"Da doc {DanhSach.Count} website tu secret.");
+
+var KetQuaTatCa = await new KiemTraWebsite().KiemTraTatCaAsync(DanhSach);
+
+// Log chi ghi ma dinh danh va ma loai loi, khong ghi URL/ten
+foreach (var KetQua in KetQuaTatCa)
 {
-    Console.WriteLine($"{website.MaDinhDanh}: da nap");
+    var TrangThai = KetQua.HoatDong ? "UP" : "DOWN";
+    var MaHttp = KetQua.MaTrangThaiHttp?.ToString() ?? "-";
+    Console.WriteLine(
+        $"{KetQua.MaDinhDanh}: {TrangThai} | Http={MaHttp} | {KetQua.ThoiGianPhanHoiMs}ms | Loi={KetQua.LoaiLoi ?? "-"} | SoLanThu={KetQua.SoLanThu}");
 }
 
+var SoLoi = KetQuaTatCa.Count(Muc => !Muc.HoatDong);
+Console.WriteLine($"Tong: {KetQuaTatCa.Length} website, {SoLoi} loi.");
+
+// Luon tra 0 khi tool chay dung, ke ca khi co website DOWN
 return 0;
 
 record WebsiteCauHinh(string MaDinhDanh, string TenWebsite, string Url);
