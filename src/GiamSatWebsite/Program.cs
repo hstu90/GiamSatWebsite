@@ -50,6 +50,17 @@ foreach (var KetQua in KetQuaTatCa)
 var SoLoi = KetQuaTatCa.Count(Muc => !Muc.HoatDong);
 Console.WriteLine($"Tong: {KetQuaTatCa.Length} website, {SoLoi} loi.");
 
+// Cap nhat trang thai, ghi TrangThai.json khi can, in cac website doi trang thai
+var DuongDanTrangThai = Environment.GetEnvironmentVariable("DUONG_DAN_TRANG_THAI") ?? "TrangThai.json";
+var DanhSachThayDoi = new QuanLyTrangThai(DuongDanTrangThai).CapNhatVaGhi(KetQuaTatCa);
+
+foreach (var ThayDoi in DanhSachThayDoi)
+{
+    var Nhan = ThayDoi.KetQua.HoatDong ? "PHUC HOI" : "NGUNG HOAT DONG";
+    Console.WriteLine(
+        $"{ThayDoi.KetQua.MaDinhDanh}: {Nhan} (trang thai truoc keo dai {(int)ThayDoi.ThoiGianTrangThaiTruoc.TotalMinutes} phut)");
+}
+
 // Luon tra 0 khi tool chay dung, ke ca khi co website DOWN
 return 0;
 
