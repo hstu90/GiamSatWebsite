@@ -2,24 +2,24 @@ name: KiemTraWebsite
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # Chu ky chung. Muon 10 phut thi doi thanh "*/10 * * * *"
-  workflow_dispatch:         # Cho phep chay thu cong de kiem thu
+    - cron: "*/5 * * * *"   # Muon 10 phut thi doi thanh "*/10 * * * *"
+  workflow_dispatch:
 
 permissions:
-  contents: read             # Se doi thanh write o buoc 3 (commit TrangThai.json)
+  contents: write            # Can de commit TrangThai.json
 
 concurrency:
-  group: kiemtra-website     # Khong chay chong 2 luot cung luc
+  group: kiemtra-website
   cancel-in-progress: false
 
 jobs:
   KiemTra:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
 
@@ -27,4 +27,15 @@ jobs:
         working-directory: src/GiamSatWebsite
         env:
           DANH_SACH_WEBSITE: ${{ secrets.DANH_SACH_WEBSITE }}
+          DUONG_DAN_TRANG_THAI: ${{ github.workspace }}/TrangThai.json
         run: dotnet run -c Release
+
+      - name: Luu TrangThai.json
+        run: |
+          if [[ -n "$(git status --porcelain TrangThai.json)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add TrangThai.json
+            git commit -m "Cap nhat trang thai website"
+            git push
+          fi
