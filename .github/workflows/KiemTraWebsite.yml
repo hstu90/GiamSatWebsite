@@ -29,6 +29,8 @@ jobs:
         working-directory: src/GiamSatWebsite
         env:
           DANH_SACH_WEBSITE: ${{ secrets.DANH_SACH_WEBSITE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DUONG_DAN_TRANG_THAI: ${{ github.workspace }}/TrangThai.json
         run: dotnet run -c Release
 
