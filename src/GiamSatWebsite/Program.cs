@@ -61,6 +61,31 @@ foreach (var ThayDoi in DanhSachThayDoi)
         $"{ThayDoi.KetQua.MaDinhDanh}: {Nhan} (trang thai truoc keo dai {(int)ThayDoi.ThoiGianTrangThaiTruoc.TotalMinutes} phut)");
 }
 
+// Gui thong bao Telegram: 1 tin gop cho cac website doi trang thai trong luot nay
+if (DanhSachThayDoi.Count > 0)
+{
+    var MaBot = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN");
+    var MaCuocTroChuyen = Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID");
+    if (string.IsNullOrWhiteSpace(MaBot) || string.IsNullOrWhiteSpace(MaCuocTroChuyen))
+    {
+        Console.Error.WriteLine("Thieu secret TELEGRAM_BOT_TOKEN hoac TELEGRAM_CHAT_ID.");
+        return 1;
+    }
+
+    var TheoMa = DanhSach.ToDictionary(Website => Website.MaDinhDanh);
+    var NoiDungTin = ThongBaoTelegram.TaoNoiDung(DanhSachThayDoi, TheoMa);
+    var DaGui = await new ThongBaoTelegram(MaBot, MaCuocTroChuyen).GuiAsync(NoiDungTin);
+
+    if (!DaGui)
+    {
+        // Tra ve 1 de buoc luu TrangThai.json bi bo qua, lan sau se bao lai
+        Console.Error.WriteLine("Gui Telegram that bai, khong luu trang thai de lan sau gui lai.");
+        return 1;
+    }
+
+    Console.WriteLine("Da gui thong bao Telegram.");
+}
+
 // Luon tra 0 khi tool chay dung, ke ca khi co website DOWN
 return 0;
 
